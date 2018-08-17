@@ -84,11 +84,11 @@ object ConnectingToDatabaseSection extends FlatSpec with Matchers with Section {
   /** What if we want to do more than one thing in a transaction? Easy! ConnectionIO is a monad,
    * so we can use a for comprehension to compose two smaller programs into one larger program.
    */
-  def combineTwoPrograms(res0: (Int, Int)) = {
+  def combineTwoPrograms(res0: Int) = {
     val largerProgram = for {
       a <- sql"select 42".query[Int].unique
       b <- sql"select power(5, 2)".query[Int].unique
-    } yield (a, b)
+    } yield (a + b)
 
     largerProgram.transact(xa).run should be(res0)
   }
